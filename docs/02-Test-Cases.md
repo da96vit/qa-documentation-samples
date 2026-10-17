@@ -10,7 +10,7 @@
 
 **Priority:** P1 = critical path / smoke, P2 = important, P3 = nice to have.
 **Type:** F = functional, N = negative, UI = visual, NF = non-functional.
-**Auto:** ✅ = covered by the Playwright suite.
+**Auto:** ✅ = automated in the [Playwright suite](https://github.com/da96vit/playwright-qa-portfolio) (each test title starts with the TC IDs it covers). Cases without ✅ are not in the regression suite; in this cycle they were executed with `scripts/execute-manual-cases.js`.
 
 ---
 
@@ -61,8 +61,8 @@
 | TC-026 | First name is required | Checkout step 1 | 1. Leave all fields empty 2. **Continue** | Error: "First Name is required" | P2 | N | ✅ |
 | TC-027 | Last name is required | First name filled | 1. Leave last name empty 2. **Continue** | Error: "Last Name is required" | P2 | N | ✅ |
 | TC-028 | Postal code is required | First and last name filled | 1. Leave postal code empty 2. **Continue** | Error: "Postal Code is required" | P2 | N | ✅ |
-| TC-029 | Form fields keep the typed values | Checkout step 1 | 1. Type first name, last name and postal code | Each field shows exactly what was typed in that field | P1 | F | |
-| TC-030 | Order total is calculated correctly | Backpack + Bike Light in cart, on step 2 | 1. Read item total, tax and total | Item total $39.98; total = item total + tax (8%) = $43.18 | P1 | F | ✅ |
+| TC-029 | Form fields keep the typed values | Checkout step 1 | 1. Type (key by key) Davit, Tester, 0179 into first name, last name and postal code | Each field shows exactly what was typed in that field | P1 | F | |
+| TC-030 | Order total is calculated correctly | Backpack + Bike Light in cart, on step 2 | 1. Read item total, tax and total | Item total $39.98; tax $3.20 (8%); total = item total + tax = $43.18 | P1 | F | ✅ |
 | TC-031 | Cancel from order overview | On step 2 | 1. Click **Cancel** | Products page shown; cart kept | P3 | F | |
 | TC-032 | Back Home after order | Order complete | 1. Click **Back Home** | Products page shown; cart is empty | P3 | F | |
 
@@ -70,8 +70,8 @@
 
 | ID | Title | Pre-conditions | Steps | Expected result | Pri | Type | Auto |
 |---|---|---|---|---|---|---|---|
-| TC-033 | Login response time | On login page | 1. Log in and time until products are visible | Products page within 2 seconds | P2 | NF | |
-| TC-034 | Layout matches design | Logged in | 1. Compare header, cart icon, product cards and buttons with the reference (`standard_user`) | Elements aligned; no shifted or overlapping elements | P3 | UI | |
+| TC-033 | Login response time | On login page, site already loaded once | 1. Log in and measure from clicking **Login** until the first product card is shown | Products page within 2 seconds | P2 | NF | |
+| TC-034 | Products page layout is consistent | Logged in, window 1280×800 | 1. Check the position of the cart icon, product titles and **Add to cart** buttons | Cart icon inside the header, not overlapping the sort dropdown; all product titles left-aligned; every **Add to cart** button at the same position in its card | P3 | UI | |
 | TC-035 | No JavaScript errors during purchase | DevTools console open | 1. Run TC-025 | No uncaught JavaScript errors in the console | P2 | NF | |
 
 ---
@@ -80,13 +80,19 @@
 
 | Requirement | Description | Test cases |
 |---|---|---|
-| REQ-01 | Registered users can log in; invalid or locked accounts are refused | TC-001 – TC-005, TC-009 |
+| REQ-01 | Registered users can log in; invalid or locked accounts are refused | TC-001 – TC-006, TC-009 |
 | REQ-02 | Pages behind login are protected; logout ends the session | TC-007, TC-008 |
 | REQ-03 | The catalogue shows correct product data | TC-010 – TC-012, TC-016, TC-017 |
 | REQ-04 | Users can sort products by name and price | TC-013 – TC-015 |
 | REQ-05 | Users can add and remove products and see the cart | TC-018 – TC-024 |
 | REQ-06 | Checkout validates customer data | TC-026 – TC-029 |
 | REQ-07 | Order totals are correct and the order can be completed | TC-025, TC-030 – TC-032 |
-| REQ-08 | The app is responsive, visually consistent and error-free | TC-033 – TC-035, TC-006 |
+| REQ-08 | The app is responsive, visually consistent and error-free | TC-033 – TC-035 |
 
-**Coverage:** 35 test cases across 8 requirements; 18 of 35 (51%) are automated.
+**Coverage:** 35 test cases across 8 requirements; every requirement has at least one test case. 18 of 35 (51%) are automated:
+
+| Playwright test (tests/ui) | Test cases |
+|---|---|
+| login.spec.ts | TC-001, TC-002, TC-003, TC-004, TC-005, TC-007 |
+| inventory.spec.ts | TC-010, TC-013, TC-014, TC-015, TC-018, TC-020 |
+| checkout.spec.ts | TC-022, TC-025, TC-026, TC-027, TC-028, TC-030 |

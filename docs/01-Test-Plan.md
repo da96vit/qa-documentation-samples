@@ -7,7 +7,7 @@
 | **Author** | Davit Jikurashvili, Senior QA Engineer |
 | **Date** | 17 October 2026 |
 | **Application under test** | Swag Labs, https://www.saucedemo.com (public demo e-commerce app) |
-| **Status** | Approved for execution |
+| **Status** | Final (see section 12, Approvals) |
 
 ---
 
@@ -30,6 +30,8 @@ The app ships with several test accounts. Each one simulates a different kind of
 | `error_user` | Errors in cart and checkout actions |
 | `visual_user` | Visual and layout defects |
 
+**Test item:** the production demo deployed at https://www.saucedemo.com on 17 October 2026. The site exposes no version or build number, so the test date identifies the build.
+
 ## 3. Scope
 
 ### 3.1 In scope
@@ -40,7 +42,7 @@ The app ships with several test accounts. Each one simulates a different kind of
 | **Product catalogue** | Product list, images, prices, product detail page, sorting (A→Z, Z→A, price ↑, price ↓) |
 | **Cart** | Add / remove from the list and from the detail page, cart badge, cart page, cart persistence |
 | **Checkout** | Customer information form and validation, order overview and price calculation (item total + tax = total), order completion |
-| **Cross-browser** | Latest Chrome and Firefox (desktop) |
+| **Cross-browser** | Desktop Chromium and Firefox (the builds bundled with Playwright 1.64) |
 | **Non-functional (light)** | Basic page responsiveness; obvious visual and layout defects |
 
 ### 3.2 Out of scope
@@ -48,25 +50,25 @@ The app ships with several test accounts. Each one simulates a different kind of
 - Real payments and shipping (the app uses fixed demo payment data)
 - Back-end and database testing (no access to the server side)
 - Load, stress and security penetration testing
-- Native mobile apps; mobile browsers are covered only by a smoke check
+- Native mobile apps and mobile browsers
 - Third-party links in the footer (Twitter, Facebook, LinkedIn)
 
 ## 4. Test approach
 
 | Level / type | Approach |
 |---|---|
-| **Smoke** | 5 critical-path checks run first on every build. If any fails, the build is rejected. |
-| **Functional** | Scripted test cases (see *02-Test-Cases*) designed with equivalence partitioning, boundary values and state transitions (cart states, checkout steps). |
+| **Smoke** | 5 `@smoke`-tagged automated checks (3 UI: login, add/remove, end-to-end purchase; 2 API: health, create booking). A failing smoke check fails the CI run. |
+| **Functional** | Scripted test cases (see *02-Test-Cases*) designed with equivalence partitioning (valid / invalid / empty / locked credentials) and state transitions (cart states, checkout steps). |
 | **Negative** | Invalid and empty input, locked account, direct URL access without login. |
 | **Regression** | The automated Playwright suite (UI + API) runs in CI on every change. |
-| **Exploratory** | 2 × 45-minute time-boxed sessions per user account, using session charters (e.g. "explore checkout with unusual names and long input"). |
-| **Cross-browser** | Smoke and critical cases repeated in Chrome and Firefox. |
-| **Account-based (persona) testing** | Smoke and critical cases repeated for every demo account to show account-specific defects. |
+| **Exploratory** | Time-boxed sessions with charters (e.g. "explore checkout with unusual names and long input") when time allows. Findings are logged as defects or new test cases. |
+| **Cross-browser** | The 18 automated cases run in both Chromium and Firefox; the other 17 cases are executed in Chromium only. |
+| **Account-based (persona) testing** | 11 key cases repeated for every demo account to show account-specific defects (`scripts/run-account-matrix.js`). |
 
 ### Automation
 
-Repeatable, high-value cases are automated with **Playwright + TypeScript** (Page Object Model) and run in **GitHub Actions**: https://github.com/da96vit/playwright-qa-portfolio.
-Exploratory, visual and one-off checks stay manual.
+Repeatable, high-value cases (18 of 35) are automated with **Playwright + TypeScript** (Page Object Model) and run in **GitHub Actions**: https://github.com/da96vit/playwright-qa-portfolio. Each automated test is named after the test case IDs it covers.
+The other 17 cases are not part of the regression suite. In this cycle they are executed with a one-off Playwright script (`scripts/execute-manual-cases.js`), so every result can be re-run and checked.
 
 ## 5. Entry and exit criteria
 
@@ -85,15 +87,18 @@ Exploratory, visual and one-off checks stay manual.
 **Suspension criteria**
 - The environment is down for more than 1 hour, or login fails for `standard_user` (testing is blocked)
 
+**Resumption criteria**
+- The environment is reachable again and `standard_user` can log in; the smoke checks are re-run before execution continues
+
 ## 6. Test environment
 
 | Item | Value |
 |---|---|
 | URL | https://www.saucedemo.com |
-| Browsers | Latest stable Chrome and Firefox (desktop, 1280×800); Playwright Chromium / Firefox in CI |
+| Browsers | Playwright 1.64 bundled builds: Chromium 156 and Firefox 157 (desktop). Viewport 1280×720 in the automated suite, 1280×800 in the execution and evidence scripts |
 | OS | Windows 11; Ubuntu (CI) |
-| Test data | Demo accounts listed above, password `secret_sauce`; customer data: Davit / Tester / 0179 |
-| Tools | Jira (defects), Playwright (automation), GitHub Actions (CI), Chrome DevTools (console and network) |
+| Test data | Demo accounts listed above, password `secret_sauce`; customer data: Davit / Tester / 0179; expected product names and prices as listed in TC-012 |
+| Tools | Playwright (automation and scripted execution), GitHub Actions (CI), Markdown bug reports with Jira-style fields (no tracker is connected to this public demo) |
 
 ## 7. Defect management
 
@@ -101,7 +106,7 @@ Each defect is logged with: ID, title, environment, account, preconditions, step
 
 | Severity | Definition |
 |---|---|
-| **Critical** | Blocks the main purchase flow; no workaround |
+| **Critical** | Blocks the main purchase flow with no workaround, or causes financial or legal exposure (e.g. the price shown differs from the price charged) |
 | **High** | Major function broken or wrong data shown; workaround is hard |
 | **Medium** | Function partly broken; a reasonable workaround exists |
 | **Low** | Cosmetic issue or minor inconvenience |
@@ -130,7 +135,7 @@ Defect life cycle: *New → Open → In Progress → Fixed → Retest → Closed
 |---|---|
 | 1 | Requirements review, test plan, test case design |
 | 2 | Test case review; test data setup; automation smoke suite |
-| 3–4 | Test execution (all accounts, both browsers); exploratory sessions; defect logging |
+| 3–4 | Test execution (all accounts; automated cases in both browsers); exploratory sessions; defect logging |
 | 5 | Retesting, regression run, Test Summary Report |
 
 ## 11. Roles
@@ -140,3 +145,10 @@ Defect life cycle: *New → Open → In Progress → Fixed → Retest → Closed
 | QA Engineer (Davit Jikurashvili) | Test planning, design, execution, automation, reporting |
 | Developer | Defect fixing, unit tests |
 | Product Owner | Requirement clarification, release decision |
+
+## 12. Approvals
+
+| Role | Name | Decision |
+|---|---|---|
+| QA Engineer (author) | Davit Jikurashvili | Approved for execution, 17 October 2026 |
+| Product Owner | Not applicable: saucedemo.com is a public demo without a product team | |

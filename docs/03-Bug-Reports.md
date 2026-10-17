@@ -5,10 +5,10 @@
 | **Document ID** | BR-SL-001 |
 | **Reporter** | Davit Jikurashvili |
 | **Date found** | 17 October 2026 |
-| **Environment** | https://www.saucedemo.com · Chromium (Playwright) and Chrome, Windows 11, 1280×800 |
+| **Environment** | https://www.saucedemo.com (production demo, no build number exposed) · Chromium 156 (Playwright 1.64) · Windows 11 · 1280×800 |
 | **Password for all accounts** | `secret_sauce` |
 
-Each defect below was reproduced at least twice. Results are compared with the baseline account `standard_user`, where the same steps work correctly.
+Each defect below was reproduced at least twice on 17 October 2026 with [`scripts/capture-evidence.js`](https://github.com/da96vit/qa-documentation-samples/blob/main/scripts/capture-evidence.js), which saves the screenshots and writes the observed values (URLs, field values, console errors, timings) to [`evidence/evidence-log.json`](https://github.com/da96vit/qa-documentation-samples/blob/main/docs/evidence/evidence-log.json). Results are compared with the baseline account `standard_user`, where the same steps work correctly.
 
 ## Summary
 
@@ -17,7 +17,7 @@ Each defect below was reproduced at least twice. Results are compared with the b
 | BUG-001 | All products show the same placeholder image | problem_user | Medium | P2 |
 | BUG-002 | Product sorting has no effect | problem_user | Medium | P2 |
 | BUG-003 | "Add to cart" does nothing for 3 of 6 products | problem_user | High | P1 |
-| BUG-004 | "Remove" on the products page does not remove items | problem_user | High | P2 |
+| BUG-004 | "Remove" on the products page does not remove items | problem_user | Medium | P2 |
 | BUG-005 | Typing in Last Name overwrites First Name; checkout blocked | problem_user | Critical | P1 |
 | BUG-006 | Product link opens the wrong product | problem_user | High | P2 |
 | BUG-007 | "Add to cart" throws a JavaScript error for 3 products | error_user | High | P1 |
@@ -27,7 +27,7 @@ Each defect below was reproduced at least twice. Results are compared with the b
 | BUG-011 | Login takes about 5 seconds | performance_glitch_user | Medium | P2 |
 | BUG-012 | Layout defects: wrong image, misplaced cart icon, shifted titles | visual_user | Low | P3 |
 
-**Totals:** 3 Critical · 5 High · 3 Medium · 1 Low
+**Totals:** 3 Critical · 4 High · 4 Medium · 1 Low
 
 ---
 
@@ -68,7 +68,9 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Expected:** The list is re-ordered: Z→A starts with "Test.allTheThings() T-Shirt (Red)"; low→high starts with $7.99.
 
-**Actual:** The order stays A→Z (Backpack $29.99 first) after both selections.
+**Actual:** The order stays A→Z (Backpack $29.99 first) after both selections, and the dropdown keeps showing "Name (A to Z)". For `error_user` each selection also opens a browser alert: "Sorting is broken! This error has been reported to Backtrace."
+
+**Evidence:** `BUG-002` in [evidence-log.json](https://github.com/da96vit/qa-documentation-samples/blob/main/docs/evidence/evidence-log.json) (the page looks exactly like the BUG-001 screenshot, so no separate screenshot).
 
 ---
 
@@ -90,13 +92,15 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Impact:** Half the catalogue cannot be bought.
 
+![BUG-003 evidence](evidence/BUG-003-add-to-cart-only-3-products.png)
+
 ---
 
 ## BUG-004: "Remove" on the products page does not remove items
 
 | Field | Value |
 |---|---|
-| **Severity / Priority** | High / P2 |
+| **Severity / Priority** | Medium / P2 (a workaround exists, see below) |
 | **Account** | problem_user |
 | **Related test case** | TC-020 |
 
@@ -111,6 +115,8 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Workaround:** Remove the items from the Cart page.
 
+**Evidence:** `BUG-004` in [evidence-log.json](https://github.com/da96vit/qa-documentation-samples/blob/main/docs/evidence/evidence-log.json) (the page is unchanged from the BUG-003 screenshot).
+
 ---
 
 ## BUG-005: Typing in Last Name overwrites First Name; checkout blocked
@@ -124,12 +130,12 @@ Each defect below was reproduced at least twice. Results are compared with the b
 **Steps to reproduce**
 1. Log in as `problem_user` and add any product to the cart.
 2. Open the cart → **Checkout**.
-3. Type `Davit` in **First Name**, `Tester` in **Last Name**, `0179` in **Postal Code**.
+3. Type (key by key) `Davit` in **First Name**, `Tester` in **Last Name**, `0179` in **Postal Code**.
 4. Click **Continue**.
 
 **Expected:** The fields contain Davit / Tester / 0179 and the order overview opens.
 
-**Actual:** Text typed into Last Name replaces the First Name value (First Name = "Tester"), Last Name stays empty, and the error "Last Name is required" is shown.
+**Actual:** Every key typed into Last Name replaces the whole First Name value, so First Name ends up as the last character typed ("r") and Last Name stays empty. **Continue** shows "Error: Last Name is required". (Pasting "Tester" instead leaves First Name = "Tester"; Last Name is still empty.)
 
 **Impact:** The user cannot complete any purchase; there is no workaround.
 
@@ -155,6 +161,8 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Impact:** Customers may buy the wrong item.
 
+![BUG-006 evidence](evidence/BUG-006-wrong-product-page.png)
+
 ---
 
 ## BUG-007: "Add to cart" throws a JavaScript error for 3 products
@@ -172,7 +180,9 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Expected:** Products are added; no console errors.
 
-**Actual:** The products are not added, and the console shows an uncaught error `Failed to add item to the cart.` for each click. **Remove** also fails, with `Failed to remove item from cart.`
+**Actual:** The 3 products are not added (badge stays at 3 after clicking **Add to cart** on all 6), and each click throws an uncaught `Error: Failed to add item to the cart.` **Remove** on the products page also fails for the 3 products that were added (Backpack, Bike Light, Onesie), with `Error: Failed to remove item from cart.`
+
+![BUG-007 evidence](evidence/BUG-007-add-and-remove-fail.png)
 
 ---
 
@@ -191,9 +201,11 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Expected:** Last Name accepts input. If it is empty, the error "Last Name is required" blocks the step.
 
-**Actual:** Last Name stays empty whatever is typed, and the form still moves to the order overview without a last name. **Validation is bypassed.**
+**Actual:** Last Name stays empty whatever is typed; every key press throws an uncaught `TypeError: Cannot read properties of undefined (reading 'value')`. **Continue** still opens the order overview without a last name. **Validation is bypassed.**
 
 **Impact:** Orders can be created with incomplete customer data.
+
+![BUG-008 evidence](evidence/BUG-008-last-name-stays-empty.png)
 
 ---
 
@@ -212,7 +224,7 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Expected:** The "Thank you for your order!" page opens.
 
-**Actual:** Nothing visible happens; the user stays on the overview page. The console shows a JavaScript `TypeError: ... is not a function`.
+**Actual:** Nothing visible happens; the user stays on `/checkout-step-two.html`. The click throws an uncaught `TypeError: La.cesetRart is not a function` (minified code, so the function name may change between builds).
 
 **Impact:** No order can be placed.
 
@@ -235,7 +247,7 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Expected:** Backpack $29.99, Bike Light $9.99, … (same as `standard_user`), always with 2 decimals; low→high shows ascending prices.
 
-**Actual:** Prices are random and different on every render (e.g. Backpack $86.2, then $54.62; Bike Light $0.5). Some are missing the second decimal, and after "low to high" the list is not in ascending order. The checkout overview still charges the real price ($29.99), so **the price shown does not match the price charged**.
+**Actual:** Prices are random and different on every render (in the recorded run: Backpack $12.68, then $29.85 after reload; Fleece Jacket $19.2). Some are missing the second decimal, and after "low to high" the list is not in ascending order. The checkout overview still charges the real price ($29.99), so **the price shown does not match the price charged**.
 
 **Impact:** Misleading pricing; a possible legal and compliance issue.
 
@@ -253,11 +265,13 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Steps to reproduce**
 1. Log in as `performance_glitch_user`.
-2. Measure the time from clicking **Login** until the Products page is shown.
+2. Measure the time from clicking **Login** until the first product card is shown.
 
 **Expected:** Under 2 seconds.
 
-**Actual:** About 5.1 seconds every time (3 warm runs: 5.11 s, 5.12 s, 5.14 s), compared with about 0.1 s for `standard_user` under the same conditions (0.14 s, 0.11 s, 0.10 s). That is about 45 times slower.
+**Actual:** About 5.1 seconds every time (3 runs: 5.12 s, 5.12 s, 5.11 s), compared with about 0.1 s for `standard_user` under the same conditions (0.10 s, 0.09 s, 0.10 s), roughly 50 times slower.
+
+**How it was measured:** `scripts/capture-evidence.js`, Playwright Chromium, a new browser context (empty cache and storage) for every run, timer started on the Login click and stopped when the first product card rendered. Raw values: `BUG-011` in [evidence-log.json](https://github.com/da96vit/qa-documentation-samples/blob/main/docs/evidence/evidence-log.json).
 
 **Impact:** A poor first impression; users may abandon the session.
 
@@ -269,7 +283,7 @@ Each defect below was reproduced at least twice. Results are compared with the b
 |---|---|
 | **Severity / Priority** | Low / P3 |
 | **Account** | visual_user |
-| **Related test case** | TC-034 |
+| **Related test cases** | TC-011, TC-034 |
 
 **Steps to reproduce**
 1. Log in as `visual_user` and compare the Products page with `standard_user`.
@@ -278,7 +292,10 @@ Each defect below was reproduced at least twice. Results are compared with the b
 
 **Actual:**
 - The Sauce Labs Backpack shows a dog photo instead of the backpack
-- The cart icon is shifted out of the header, above the sort dropdown
-- The "Bolt T-Shirt" and "Fleece Jacket" titles are offset to the right
+- The cart icon is shifted out of the header (at 1280×800 it reaches about 24 px below the header and overlaps the sort dropdown)
+- The "Bolt T-Shirt" and "Fleece Jacket" titles are right-aligned instead of left-aligned
+- The **Add to cart** button of "Test.allTheThings() T-Shirt (Red)" is shifted to the right, out of line with the other buttons
 
-See the BUG-010 screenshot above.
+**Why Low and not Medium like BUG-001:** one product image is wrong but its name, description and price are correct; BUG-001 replaces all six images.
+
+See the BUG-010 screenshot above (same page) and `BUG-012` in [evidence-log.json](https://github.com/da96vit/qa-documentation-samples/blob/main/docs/evidence/evidence-log.json).

@@ -1,0 +1,94 @@
+{
+ "account": "standard_user",
+ "browser": "Chromium 156.0.8078.4 (Playwright)",
+ "viewport": "1280x800",
+ "executedAt": "2026-10-17T10:10:02.425Z",
+ "summary": "17/17 passed",
+ "results": [
+  {
+   "id": "TC-006",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-008",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-009",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-011",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-012",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-016",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-017",
+   "result": "PASS",
+   "note": "sort after back = az"
+  },
+  {
+   "id": "TC-019",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-021",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-023",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-024",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-029",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-031",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-032",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-033",
+   "result": "PASS",
+   "note": "94 ms"
+  },
+  {
+   "id": "TC-034",
+   "result": "PASS",
+   "note": ""
+  },
+  {
+   "id": "TC-035",
+   "result": "PASS",
+   "note": ""
+  }
+ ]
+}

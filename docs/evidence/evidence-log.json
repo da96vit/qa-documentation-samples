@@ -1,0 +1,146 @@
+{
+  "capturedAt": "2026-10-17T10:09:26.780Z",
+  "browser": "Chromium 156.0.8078.4 (Playwright)",
+  "viewport": "1280x800",
+  "BUG-001": {
+    "imageSources": [
+      "/assets/sl-404-Cq1a9k9X.jpg",
+      "/assets/sl-404-Cq1a9k9X.jpg",
+      "/assets/sl-404-Cq1a9k9X.jpg",
+      "/assets/sl-404-Cq1a9k9X.jpg",
+      "/assets/sl-404-Cq1a9k9X.jpg",
+      "/assets/sl-404-Cq1a9k9X.jpg"
+    ]
+  },
+  "BUG-002": {
+    "problem_user": {
+      "firstAfterZtoA": "Sauce Labs Backpack",
+      "pricesAfterLowToHigh": [
+        "$29.99",
+        "$9.99",
+        "$15.99",
+        "$49.99",
+        "$7.99",
+        "$15.99"
+      ],
+      "dialogs": []
+    },
+    "error_user": {
+      "firstAfterZtoA": "Sauce Labs Backpack",
+      "pricesAfterLowToHigh": [
+        "$29.99",
+        "$9.99",
+        "$15.99",
+        "$49.99",
+        "$7.99",
+        "$15.99"
+      ],
+      "dialogs": [
+        "Sorting is broken! This error has been reported to Backtrace.",
+        "Sorting is broken! This error has been reported to Backtrace."
+      ]
+    }
+  },
+  "BUG-003": {
+    "badgeAfterAddingAll": "3",
+    "stillAddToCart": [
+      "Sauce Labs Bolt T-Shirt",
+      "Sauce Labs Fleece Jacket",
+      "Test.allTheThings() T-Shirt (Red)"
+    ]
+  },
+  "BUG-004": {
+    "badgeAfterRemovingAll": "3",
+    "buttonsStillRemove": 3
+  },
+  "BUG-005": {
+    "fieldsAfterTyping": [
+      "r",
+      "",
+      "0179"
+    ],
+    "error": "Error: Last Name is required",
+    "url": "https://www.saucedemo.com/checkout-step-one.html"
+  },
+  "BUG-006": {
+    "url": "https://www.saucedemo.com/inventory-item.html?id=5",
+    "opened": "Sauce Labs Fleece Jacket"
+  },
+  "BUG-007": {
+    "badgeAfterAddingAll": "3",
+    "badgeAfterRemovingAll": "3",
+    "uncaughtErrors": [
+      "Error: Failed to add item to the cart.",
+      "Error: Failed to add item to the cart.",
+      "Error: Failed to add item to the cart.",
+      "Error: Failed to remove item from cart.",
+      "Error: Failed to remove item from cart.",
+      "Error: Failed to remove item from cart."
+    ]
+  },
+  "BUG-008": {
+    "fieldsAfterTyping": [
+      "Davit",
+      "",
+      "0179"
+    ],
+    "uncaughtErrorsWhileTyping": [
+      "TypeError: Cannot read properties of undefined (reading 'value')",
+      "TypeError: Cannot read properties of undefined (reading 'value')",
+      "TypeError: Cannot read properties of undefined (reading 'value')",
+      "TypeError: Cannot read properties of undefined (reading 'value')",
+      "TypeError: Cannot read properties of undefined (reading 'value')",
+      "TypeError: Cannot read properties of undefined (reading 'value')"
+    ],
+    "urlAfterContinue": "https://www.saucedemo.com/checkout-step-two.html"
+  },
+  "BUG-009": {
+    "urlAfterFinish": "https://www.saucedemo.com/checkout-step-two.html",
+    "uncaughtErrors": [
+      "TypeError: La.cesetRart is not a function"
+    ]
+  },
+  "BUG-010": {
+    "pricesFirstRender": [
+      "$12.68",
+      "$70.25",
+      "$19.05",
+      "$19.2",
+      "$60.69",
+      "$82.88"
+    ],
+    "pricesAfterReload": [
+      "$29.85",
+      "$91.24",
+      "$49.27",
+      "$30.96",
+      "$30.25",
+      "$43.23"
+    ],
+    "backpackPriceAtCheckout": "$29.99"
+  },
+  "BUG-011": {
+    "method": "click Login -> first product card rendered; new browser context per run",
+    "ms": {
+      "standard_user": [
+        99,
+        91,
+        96
+      ],
+      "performance_glitch_user": [
+        5123,
+        5115,
+        5110
+      ]
+    }
+  },
+  "BUG-012": {
+    "backpackImage": "/assets/sl-404-Cq1a9k9X.jpg",
+    "rightAlignedTitles": [
+      "Sauce Labs Bolt T-Shirt",
+      "Sauce Labs Fleece Jacket"
+    ],
+    "cartIconTop": 39,
+    "headerBottom": 57
+  }
+}
