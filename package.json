@@ -1,0 +1,20 @@
+{
+  "name": "qa-documentation-samples",
+  "version": "1.0.0",
+  "description": "QA documentation samples: test plan, test cases, bug reports and test summary report for saucedemo.com",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "evidence": "node scripts/capture-evidence.js",
+    "pdf": "node scripts/build-pdf.js"
+  },
+  "keywords": [],
+  "author": "Davit Jikurashvili",
+  "license": "MIT",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "marked": "^18.1.1"
+  }
+}
